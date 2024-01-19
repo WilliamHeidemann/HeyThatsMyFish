@@ -19,7 +19,7 @@ public class  BoardSystem : MonoBehaviour
     {
         _colorSystem = FindFirstObjectByType<ColorSystem>();
         _penguinSystem = FindFirstObjectByType<PenguinSystem>();
-        _board = Board.CreateHexagonBoard(3);
+        _board = Board.CreateHexagonBoard(5);
     }
 
     private void Start()

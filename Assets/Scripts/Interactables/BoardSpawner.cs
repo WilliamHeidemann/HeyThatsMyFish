@@ -41,8 +41,7 @@ public class BoardSpawner : MonoBehaviour
         xOffset += q * padding;
         yOffset += r * padding;
         // zOffset += s * padding;
-
-        return new Vector3(xOffset, yOffset, zOffset);
+        return new Vector3(xOffset, yOffset, zOffset) * 0.65f;
     }
 
     public void DestroyBoard()
