@@ -13,7 +13,7 @@ public class  BoardSystem : MonoBehaviour
     private PenguinSystem _penguinSystem;
     private readonly TurnManager _teamManager = new();
     private Option<Location> _selectedLocation = Option<Location>.None;
-    private int _penguinsToPlace = 8;
+    private int _penguinsToPlace = 4;
     
     private void Awake()
     {
@@ -29,31 +29,34 @@ public class  BoardSystem : MonoBehaviour
 
     private void StartTileSelectionPhase()
     {
-        InteractableTile.TilePointerEnter += HighlightTile;
-        InteractableTile.TilePointerExit += ResetAllTileColors;
+        InteractableTile.TilePointerEnter += HighlightUnoccupiedTile;
+        InteractableTile.TilePointerExit += ResetAllTileColorsOverload;
         InteractableTile.TilePointerClick += PlacePenguin;
     }
 
     private void StartGamePhase()
     {
-        InteractableTile.TilePointerEnter -= HighlightTile;
+        InteractableTile.TilePointerEnter -= HighlightUnoccupiedTile;
         InteractableTile.TilePointerClick -= PlacePenguin;
+        InteractableTile.TilePointerExit -= ResetAllTileColorsOverload;
         
         InteractableTile.TilePointerEnter += InteractableTileHoverEnter;
         InteractableTile.TilePointerClick += InteractableTileClick;
+        InteractableTile.TilePointerExit += HighlightSelectable;
     }
-    
-    private void HighlightTile(Location location)
+
+    private void HighlightUnoccupiedTile(Location location)
     {
-        _colorSystem.ColorTile(location, ColorSystem.ColorType.Clickable);
-        print("Coloring");
+        if (_board.HasTile(location, out var tile) == false) return;
+        if (tile.IsOccupied) return;
+        _colorSystem.ColorTile(location, ColorSystem.ColorType.LightBlue);
     }
 
     private void PlacePenguin(Location location)
     {
         if (!_board.HasTile(location, out var tile)) return;
         if (tile.IsOccupied) return;
-        ResetAllTileColors(location);
+        ResetAllTileColors();
         tile.IsOccupied = true;
         tile.Team = Option<Team>.Some(_teamManager.TeamToMove());
         _penguinSystem.PlacePenguin(location, _teamManager.TeamToMove());
@@ -63,20 +66,67 @@ public class  BoardSystem : MonoBehaviour
         if (_penguinsToPlace == 0) StartGamePhase();
     }
 
+    private void ResetAllTileColors() => 
+        _colorSystem.ColorTiles(_board.Tiles
+            .Where(tile => tile.IsWater == false)
+            .Select(tile => tile.Location), 
+            ColorSystem.ColorType.Default);
+
+    private void ResetAllTileColorsOverload(Location _) => ResetAllTileColors();
+
     private void InteractableTileHoverEnter(Location location)
     {
-        var reachableLocations = _board.ReachableLocations(location);
-        _colorSystem.ColorTiles(reachableLocations, ColorSystem.ColorType.Clickable);
-        _colorSystem.ColorTile(location, ColorSystem.ColorType.Clickable);
+        if (_board.HasTile(location, out var tile) == false) return;
+        if (tile.Team.IsSome(out var team))
+        {
+            if (team != _teamManager.TeamToMove()) return;
+            // Her står min pingvin
+            SelectPenguin(location);
+            return;
+        }
+        
+        if (!_selectedLocation.IsSome(out var penguinLocation)) return;
+        var reachableLocations = _board.ReachableLocations(penguinLocation);
+        if (reachableLocations.Contains(location) == false) return;
+        _colorSystem.ColorTile(location, ColorSystem.ColorType.Blue);
     }
 
-    private void ResetAllTileColors(Location location)
+    private void SelectPenguin(Location location)
     {
-        _colorSystem.ColorTiles(_board.Locations, ColorSystem.ColorType.Default);
+        _selectedLocation = Option<Location>.Some(location);
+        HighlightSelectable(location);
+    }
+
+    private void MoveTo(Location from, Location to)
+    {
+        if (_board.HasTile(from, out var fromTile) == false) return;
+        if (_board.HasTile(to, out var toTile) == false) return;
+        fromTile.IsWater = true;
+        fromTile.Team = Option<Team>.None;
+        _colorSystem.ColorTile(from, ColorSystem.ColorType.Water);
+        toTile.IsOccupied = true;
+        toTile.Team = Option<Team>.Some(_teamManager.TeamToMove());
+        _teamManager.NextTeam();
+        ResetAllTileColors();
+        
+        _penguinSystem.MovePenguin(from, to);
     }
 
     private void InteractableTileClick(Location location)
     {
-        _colorSystem.ColorTile(location, ColorSystem.ColorType.Clicked);
+        if (_selectedLocation.IsSome(out var penguinLocation) == false) return;
+        var reachableLocations = _board.ReachableLocations(penguinLocation);
+        if (reachableLocations.Contains(location) == false) return;
+        _selectedLocation = Option<Location>.None;
+        MoveTo(penguinLocation, location);
+    }
+    
+    private void HighlightSelectable(Location location)
+    {
+        ResetAllTileColors();
+        if (!_selectedLocation.IsSome(out var penguinLocation)) return;
+        var reachableLocations = _board.ReachableLocations(penguinLocation);
+        _colorSystem.ColorTiles(reachableLocations, ColorSystem.ColorType.LightBlue);
+        _colorSystem.ColorTile(penguinLocation, ColorSystem.ColorType.LightBlue);
     }
 }
