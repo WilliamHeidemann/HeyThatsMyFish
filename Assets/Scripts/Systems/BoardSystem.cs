@@ -66,8 +66,6 @@ public class  BoardSystem : MonoBehaviour
         tile.Team = Option<Team>.Some(_teamManager.TeamToMove());
         _penguinSystem.PlacePenguin(location, _teamManager.TeamToMove());
         _teamManager.NextTeam();
-        print(_board.HasMovesLeft(_teamManager.TeamToMove()));
-
         _penguinsToPlace--;
         if (_penguinsToPlace == 0) StartGamePhase();
     }
@@ -113,10 +111,18 @@ public class  BoardSystem : MonoBehaviour
         _pointSystem.AwardPoints(fromTile.FishCount, _teamManager.TeamToMove());
         toTile.IsOccupied = true;
         toTile.Team = Option<Team>.Some(_teamManager.TeamToMove());
-        _teamManager.NextTeam();
-        ResetAllTileColors();
-        
         _penguinSystem.MovePenguin(from, to);
+        ResetAllTileColors();
+
+        if (_board.TwoPlayersCanMove())
+        {
+            _teamManager.NextTeam();
+            while (_board.HasMovesLeft(_teamManager.TeamToMove()) == false)
+            {
+                _teamManager.NextTeam();
+            }
+        }
+        else GameOver();
     }
 
     private void InteractableTileClick(Location location)
@@ -135,5 +141,19 @@ public class  BoardSystem : MonoBehaviour
         var reachableLocations = _board.ReachableLocations(penguinLocation);
         _colorSystem.ColorTiles(reachableLocations, ColorSystem.ColorType.LightBlue);
         _colorSystem.ColorTile(penguinLocation, ColorSystem.ColorType.LightBlue);
+    }
+
+    private void GameOver()
+    {
+        InteractableTile.TilePointerEnter -= InteractableTileHoverEnter;
+        InteractableTile.TilePointerClick -= InteractableTileClick;
+        InteractableTile.TilePointerExit -= HighlightSelectable;
+
+        var remainingRedPoints = _board.RemainingPoints(Team.Red);
+        _pointSystem.AwardPoints(remainingRedPoints, Team.Red);
+        print($"Red: {remainingRedPoints}");
+        var remainingBluePoints = _board.RemainingPoints(Team.Blue);
+        _pointSystem.AwardPoints(remainingBluePoints, Team.Blue);
+        print($"Blue: {remainingBluePoints}");
     }
 }
