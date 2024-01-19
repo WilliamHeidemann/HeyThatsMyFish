@@ -2,7 +2,8 @@
     "name": "Systems",
     "rootNamespace": "",
     "references": [
-        "GUID:ef01952f4f654d34bb107a9795309ae8"
+        "GUID:ef01952f4f654d34bb107a9795309ae8",
+        "GUID:b779d6817b9d45849b3de6e18da2b4ab"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

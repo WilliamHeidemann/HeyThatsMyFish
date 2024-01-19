@@ -76,4 +76,32 @@ public class Tests
         var isBlocked = _testPath.IsBlocked();
         Assert.False(isBlocked);
     }
+
+    [Test]
+    public void GetPathReturnsCorrectPath()
+    {
+        var source = new Location(0, 0, 0);
+        var destination = new Location(3, 0, -3);
+        var path = _testHexBoard.GetPath(source, destination);
+        Assert.Equals(_testPath, path);
+    }
+
+    [Test]
+    public void ReachableTileCountFromOriginIs24()
+    {
+        var source = new Location(0, 0, 0);
+        var tiles = _testHexBoard.ReachableLocations(source);
+        var reachableCount = tiles.Count();
+        Assert.AreEqual(24, reachableCount);
+    }
+    
+    [Test]
+    public void ReachableTileCountFromOriginWithOccupiedTileIs20()
+    {
+        var source = new Location(0, 0, 0);
+        _testHexBoard.Tiles.First(tile => tile.Location.Q == 0 && tile.Location.R == 1).IsOccupied = true;
+        var tiles = _testHexBoard.ReachableLocations(source);
+        var reachableCount = tiles.Count();
+        Assert.AreEqual(20, reachableCount);
+    }
 }

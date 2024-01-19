@@ -19,4 +19,28 @@ public class TestSystems
     {
         throw new NotImplementedException();
     }
+
+    [Test]
+    public void TwoPlayerGamePassTurnFromRedGoesToBlue()
+    {
+        throw new NotImplementedException();
+    }
+    
+    [Test]
+    public void TwoPlayerGamePassTurnFromBlueGoesToRed()
+    {
+        throw new NotImplementedException();
+    }
+    
+    [Test]
+    public void ThreePlayerGamePassTurnFromBlueGoesToGreen()
+    {
+        throw new NotImplementedException();
+    }
+    
+    [Test]
+    public void ThreePlayerGamePassTurnFromGreenGoesToRed()
+    {
+        throw new NotImplementedException();
+    }
 }
