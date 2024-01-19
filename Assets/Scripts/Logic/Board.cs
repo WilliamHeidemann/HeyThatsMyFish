@@ -50,34 +50,6 @@ namespace Logic
             Tiles = tiles;
             Locations = tiles.Select(tile => tile.Location);
         }
-        
-        public List<Tile> GetPath(Location fromExcluded, Location toIncluded)
-        {
-            throw new NotImplementedException();
-            
-            var path = new List<Tile>();
-            if (fromExcluded.IsSameLine(toIncluded) == false)
-            {
-                throw new Exception($"Locations are not in the same line. Source: {fromExcluded}. Destination: {toIncluded}.");
-            } 
-            
-            if (fromExcluded.Q == toIncluded.Q)
-            {
-                
-            }
-            else if (fromExcluded.R == toIncluded.R)
-            {
-                
-            }
-            else if (fromExcluded.S == toIncluded.S)
-            {
-                
-            }
-
-
-
-            return path;
-        }
 
         public IEnumerable<Location> ReachableLocations(Location origin)
         {
@@ -112,11 +84,18 @@ namespace Logic
             }
         }
 
-        public void PlacePenguin(Location location, Team team)
+        public bool HasMovesLeft(Team team)
         {
-            var tile = Tiles.First(tile => tile.Location == location);
-            tile.IsOccupied = true;
-            tile.Team = Option<Team>.Some(team);
+            var penguinTiles = Tiles.Where(tile =>
+            {
+                if (tile.Team.IsSome(out var tileTeam))
+                {
+                    return tileTeam == team;
+                }
+                return false;
+            });
+            
+            return penguinTiles.SelectMany(tile => ReachableLocations(tile.Location)).Any();
         }
 
         public bool HasTile(Location location, out Tile tile)

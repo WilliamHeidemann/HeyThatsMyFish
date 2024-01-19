@@ -33,15 +33,15 @@ public class BoardSpawner : MonoBehaviour
     
     private Vector3 CalculatePosition(int q, int r)
     {
-        var xOffset = (3.0f / 2.0f) * q;
-        var yOffset = (Mathf.Sqrt(3.0f) * (r + 0.5f * q));
+        var xOffset = (Mathf.Sqrt(3.0f) * (r + 0.5f * q));
+        var yOffset = (3.0f / 2.0f) * q;
         const float zOffset = 0f;
 
         // Apply padding
         xOffset += q * padding;
         yOffset += r * padding;
         // zOffset += s * padding;
-        return new Vector3(xOffset, yOffset, zOffset) * 0.65f;
+        return new Vector3(xOffset, yOffset, zOffset) * 0.7f;
     }
 
     public void DestroyBoard()

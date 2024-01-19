@@ -10,7 +10,7 @@ public class ColorSystem : MonoBehaviour
     [SerializeField] private Color defaultColor;
     [SerializeField] private Color clickableColor;
     [SerializeField] private Color clickedColor;
-    [SerializeField] private Color waterColor;
+    [SerializeField] private Sprite waterSprite;
     private Dictionary<Location, SpriteRenderer> _sprites;
 
     private void Start()
@@ -31,14 +31,17 @@ public class ColorSystem : MonoBehaviour
     public void ColorTile(Location location, ColorType type)
     {
         if (_sprites.ContainsKey(location) == false) return;
-        _sprites[location].color = type switch
+        if (type == ColorType.Water) _sprites[location].sprite = waterSprite;
+        else
         {
-            ColorType.Default => defaultColor,
-            ColorType.LightBlue => clickableColor,
-            ColorType.Blue => clickedColor,
-            ColorType.Water => waterColor,
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-        };
+            _sprites[location].color = type switch
+            {
+                ColorType.Default => defaultColor,
+                ColorType.LightBlue => clickableColor,
+                ColorType.Blue => clickedColor,
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
+        }
     }
     
     public enum ColorType

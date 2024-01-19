@@ -11,6 +11,7 @@ public class  BoardSystem : MonoBehaviour
     private Board _board;
     private ColorSystem _colorSystem;
     private PenguinSystem _penguinSystem;
+    private PointSystem _pointSystem;
     private readonly TurnManager _teamManager = new();
     private Option<Location> _selectedLocation = Option<Location>.None;
     private int _penguinsToPlace = 4;
@@ -19,7 +20,9 @@ public class  BoardSystem : MonoBehaviour
     {
         _colorSystem = FindFirstObjectByType<ColorSystem>();
         _penguinSystem = FindFirstObjectByType<PenguinSystem>();
+        _pointSystem = FindFirstObjectByType<PointSystem>();
         _board = Board.CreateHexagonBoard(5);
+        _pointSystem.SetFishSprites(_board.Tiles);
     }
 
     private void Start()
@@ -49,6 +52,7 @@ public class  BoardSystem : MonoBehaviour
     {
         if (_board.HasTile(location, out var tile) == false) return;
         if (tile.IsOccupied) return;
+        if (tile.FishCount != 1) return;
         _colorSystem.ColorTile(location, ColorSystem.ColorType.LightBlue);
     }
 
@@ -56,11 +60,13 @@ public class  BoardSystem : MonoBehaviour
     {
         if (!_board.HasTile(location, out var tile)) return;
         if (tile.IsOccupied) return;
+        if (tile.FishCount != 1) return;
         ResetAllTileColors();
         tile.IsOccupied = true;
         tile.Team = Option<Team>.Some(_teamManager.TeamToMove());
         _penguinSystem.PlacePenguin(location, _teamManager.TeamToMove());
         _teamManager.NextTeam();
+        print(_board.HasMovesLeft(_teamManager.TeamToMove()));
 
         _penguinsToPlace--;
         if (_penguinsToPlace == 0) StartGamePhase();
@@ -104,6 +110,7 @@ public class  BoardSystem : MonoBehaviour
         fromTile.IsWater = true;
         fromTile.Team = Option<Team>.None;
         _colorSystem.ColorTile(from, ColorSystem.ColorType.Water);
+        _pointSystem.AwardPoints(fromTile.FishCount, _teamManager.TeamToMove());
         toTile.IsOccupied = true;
         toTile.Team = Option<Team>.Some(_teamManager.TeamToMove());
         _teamManager.NextTeam();

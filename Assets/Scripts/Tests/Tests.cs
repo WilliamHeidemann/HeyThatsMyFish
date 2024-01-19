@@ -78,15 +78,6 @@ public class Tests
     }
 
     [Test]
-    public void GetPathReturnsCorrectPath()
-    {
-        var source = new Location(0, 0, 0);
-        var destination = new Location(3, 0, -3);
-        var path = _testHexBoard.GetPath(source, destination);
-        Assert.Equals(_testPath, path);
-    }
-
-    [Test]
     public void ReachableTileCountFromOriginIs24()
     {
         var source = new Location(0, 0, 0);

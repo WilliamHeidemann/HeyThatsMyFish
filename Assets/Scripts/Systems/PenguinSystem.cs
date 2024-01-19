@@ -11,13 +11,14 @@ namespace Systems
         [SerializeField] private GameObject greenPenguinPrefab;
         [SerializeField] private GameObject redPenguinPrefab;
         [SerializeField] private GameObject bluePenguinPrefab;
+        [SerializeField] private Vector3 penguinOffsetVector;
         private Dictionary<Location, Vector3> _tilePositions;
         private readonly Dictionary<Location, Transform> _penguins = new();
 
         private void Start()
         {
             _tilePositions = FindObjectsByType<InteractableTile>(FindObjectsSortMode.None)
-                .ToDictionary(tile => tile.location, tile => tile.transform.position);
+                .ToDictionary(tile => tile.location, tile => tile.transform.position + penguinOffsetVector);
         }
 
         public void PlacePenguin(Location location, Team team)
