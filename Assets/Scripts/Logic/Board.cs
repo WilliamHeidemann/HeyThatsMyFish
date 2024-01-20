@@ -113,9 +113,6 @@ namespace Logic
 
         public int RemainingPoints(Team team)
         {
-            // just award all fish in the area to the team, even though some might not be able to be caught
-            // bfs in 6 directions
-            // if a tile is water, dont include it
             var backwardQ = new Location(0, -1, 1);
             var forwardQ = new Location(0, 1, -1);
             var backwardR = new Location(-1, 0, 1);

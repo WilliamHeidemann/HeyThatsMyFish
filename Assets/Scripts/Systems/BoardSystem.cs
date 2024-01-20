@@ -64,6 +64,7 @@ public class  BoardSystem : MonoBehaviour
         ResetAllTileColors();
         tile.IsOccupied = true;
         tile.Team = Option<Team>.Some(_teamManager.TeamToMove());
+        _pointSystem.AwardPoints(tile.FishCount, _teamManager.TeamToMove());
         _penguinSystem.PlacePenguin(location, _teamManager.TeamToMove());
         _teamManager.NextTeam();
         _penguinsToPlace--;
@@ -108,7 +109,7 @@ public class  BoardSystem : MonoBehaviour
         fromTile.IsWater = true;
         fromTile.Team = Option<Team>.None;
         _colorSystem.ColorTile(from, ColorSystem.ColorType.Water);
-        _pointSystem.AwardPoints(fromTile.FishCount, _teamManager.TeamToMove());
+        _pointSystem.AwardPoints(toTile.FishCount, _teamManager.TeamToMove());
         toTile.IsOccupied = true;
         toTile.Team = Option<Team>.Some(_teamManager.TeamToMove());
         _penguinSystem.MovePenguin(from, to);
