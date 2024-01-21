@@ -39,7 +39,7 @@ public class  BoardSystem : MonoBehaviour
         {
             BoardType.Hexagon => Board.CreateHexagonBoard(gameSettings.boardSize),
             BoardType.Square => Board.CreateSquareBoard(gameSettings.boardSize),
-            BoardType.Random => throw new NotImplementedException("Random board not yet implemented"),
+            BoardType.Random => Board.CreateRandomBoard(gameSettings.boardSize),
             _ => throw new ArgumentOutOfRangeException()
         };
         _turnManager = new TurnManager(gameSettings.playerCount);

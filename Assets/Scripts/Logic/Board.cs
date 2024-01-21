@@ -30,19 +30,12 @@ namespace Logic
 
         public static Board CreateSquareBoard(int size)
         {
-            var tiles = new List<Tile>();
-            for (int q = 0; q < size; q++)
-            {
-                int colOffset = q >> 1; // integer division by 2
-                for (int r = -colOffset; r < size - colOffset; r++)
-                {
-                    int s = -q - r;
-                    var location = new Location(q, r, s);
-                    tiles.Add(new Tile(location));
-                }
-            }
-
-            return new Board(tiles);
+            throw new NotImplementedException();
+        }
+        
+        public static Board CreateRandomBoard(int gameSettingsBoardSize)
+        {
+            throw new NotImplementedException();
         }
 
         private Board(IEnumerable<Tile> tiles)
