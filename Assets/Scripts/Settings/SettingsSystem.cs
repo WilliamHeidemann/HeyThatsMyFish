@@ -13,6 +13,8 @@ namespace Settings
         {
             gameSettings.playerCount = 2;
             gameSettings.penguinsPerPlayer = 4;
+            gameSettings.boardType = BoardType.Hexagon;
+            gameSettings.boardSize = 5;
         }
 
         public void StartGame()
@@ -20,14 +22,12 @@ namespace Settings
             SceneManager.LoadScene("Game Scene");
         }
         
-        public void SetPlayers(int players)
-        {
-            gameSettings.playerCount = players;
-        }
+        public void SetPlayers(int players) => gameSettings.playerCount = players;
 
-        public void SetPenguins(int penguins)
-        {
-            gameSettings.penguinsPerPlayer = penguins;
-        }
+        public void SetPenguins(int penguins) => gameSettings.penguinsPerPlayer = penguins;
+
+        public void SetBoardType(int boardType) => gameSettings.boardType = (BoardType)boardType;
+
+        public void SetBoardSize(int boardSize) => gameSettings.boardSize = boardSize;
     }
 }

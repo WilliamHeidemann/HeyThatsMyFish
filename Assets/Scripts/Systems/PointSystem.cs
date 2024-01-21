@@ -12,6 +12,8 @@ namespace Systems
         private Dictionary<Team, int> _scoreBoard = new();
         [SerializeField] private TextMeshProUGUI redPointsText;
         [SerializeField] private TextMeshProUGUI bluePointsText;
+        [SerializeField] private TextMeshProUGUI greenPointsText;
+        [SerializeField] private TextMeshProUGUI yellowPointsText;
         [SerializeField] private Sprite oneFish;
         [SerializeField] private Sprite twoFish;
         [SerializeField] private Sprite threeFish;
@@ -23,7 +25,6 @@ namespace Systems
         public void InitializeScoreBoard(int playerCount)
         {
             if (playerCount < 2) throw new Exception("Player count less than 2");
-            if (playerCount > 2) throw new Exception("Player count greater than 2");
             _scoreBoard = new Dictionary<Team, int>
             {
                 { Team.Red, 0 },
@@ -31,6 +32,21 @@ namespace Systems
             };
             UpdatePointsGUI(Team.Red);
             UpdatePointsGUI(Team.Blue);
+            
+            if (playerCount > 2)
+            {
+                _scoreBoard.Add(Team.Green, 0);
+                UpdatePointsGUI(Team.Green);
+            }
+            else greenPointsText.gameObject.SetActive(false);
+            
+            if (playerCount > 3)
+            {
+                _scoreBoard.Add(Team.Yellow, 0);
+                UpdatePointsGUI(Team.Yellow);
+            }
+            else yellowPointsText.gameObject.SetActive(false);
+            
             endGameScreen.SetActive(false);
         }
         
@@ -66,6 +82,8 @@ namespace Systems
             {
                 Team.Red => redPointsText,
                 Team.Blue => bluePointsText,
+                Team.Green => greenPointsText,
+                Team.Yellow => yellowPointsText,
                 _ => throw new ArgumentOutOfRangeException(nameof(team), team, null)
             };
             textGUI.text = $"{team.ToString()}: {_scoreBoard[team].ToString()}";

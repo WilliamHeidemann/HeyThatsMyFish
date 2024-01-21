@@ -6,6 +6,7 @@ using Logic;
 using Settings;
 using Systems;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class  BoardSystem : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class  BoardSystem : MonoBehaviour
     private ColorSystem _colorSystem;
     private PenguinSystem _penguinSystem;
     private PointSystem _pointSystem;
-    private readonly TurnManager _teamManager = new();
+    private TurnManager _turnManager;
     private Option<Location> _selectedLocation = Option<Location>.None;
     private int _penguinsToPlace;
     [SerializeField] private GameSettings gameSettings;
@@ -41,12 +42,16 @@ public class  BoardSystem : MonoBehaviour
             BoardType.Random => throw new NotImplementedException("Random board not yet implemented"),
             _ => throw new ArgumentOutOfRangeException()
         };
+        _turnManager = new TurnManager(gameSettings.playerCount);
         _pointSystem.SetFishSprites(_board.Tiles);
         _pointSystem.InitializeScoreBoard(gameSettings.playerCount);
         _penguinsToPlace = gameSettings.playerCount * gameSettings.penguinsPerPlayer;
+        _penguinSystem.InitializePenguinSystem();
         _colorSystem.CollectSprites();
         StartTileSelectionPhase();
     }
+
+    public void MainMenu() => SceneManager.LoadScene("Main Menu");
 
     private void StartTileSelectionPhase()
     {
@@ -81,10 +86,10 @@ public class  BoardSystem : MonoBehaviour
         if (tile.FishCount != 1) return;
         ResetAllTileColors();
         tile.IsOccupied = true;
-        tile.Team = Option<Team>.Some(_teamManager.TeamToMove());
-        _pointSystem.AwardPoints(tile.FishCount, _teamManager.TeamToMove());
-        _penguinSystem.PlacePenguin(location, _teamManager.TeamToMove());
-        _teamManager.NextTeam();
+        tile.Team = Option<Team>.Some(_turnManager.TeamToMove());
+        _pointSystem.AwardPoints(tile.FishCount, _turnManager.TeamToMove());
+        _penguinSystem.PlacePenguin(location, _turnManager.TeamToMove());
+        _turnManager.NextTeam();
         _penguinsToPlace--;
         if (_penguinsToPlace == 0) StartGamePhase();
     }
@@ -102,7 +107,7 @@ public class  BoardSystem : MonoBehaviour
         if (_board.HasTile(location, out var tile) == false) return;
         if (tile.Team.IsSome(out var team))
         {
-            if (team != _teamManager.TeamToMove()) return;
+            if (team != _turnManager.TeamToMove()) return;
             // Her står min pingvin
             SelectPenguin(location);
             return;
@@ -127,18 +132,18 @@ public class  BoardSystem : MonoBehaviour
         fromTile.IsWater = true;
         fromTile.Team = Option<Team>.None;
         _colorSystem.ColorTile(from, ColorSystem.ColorType.Water);
-        _pointSystem.AwardPoints(toTile.FishCount, _teamManager.TeamToMove());
+        _pointSystem.AwardPoints(toTile.FishCount, _turnManager.TeamToMove());
         toTile.IsOccupied = true;
-        toTile.Team = Option<Team>.Some(_teamManager.TeamToMove());
+        toTile.Team = Option<Team>.Some(_turnManager.TeamToMove());
         _penguinSystem.MovePenguin(from, to);
         ResetAllTileColors();
 
         if (_board.TwoPlayersCanMove())
         {
-            _teamManager.NextTeam();
-            while (_board.HasMovesLeft(_teamManager.TeamToMove()) == false)
+            _turnManager.NextTeam();
+            while (_board.HasMovesLeft(_turnManager.TeamToMove()) == false)
             {
-                _teamManager.NextTeam();
+                _turnManager.NextTeam();
             }
         }
         else GameOver();
