@@ -9,7 +9,7 @@ namespace Systems
 {
     public class PointSystem : MonoBehaviour
     {
-        private readonly Dictionary<Team, int> _scoreBoard = new();
+        private Dictionary<Team, int> _scoreBoard = new();
         [SerializeField] private TextMeshProUGUI redPointsText;
         [SerializeField] private TextMeshProUGUI bluePointsText;
         [SerializeField] private Sprite oneFish;
@@ -17,22 +17,23 @@ namespace Systems
         [SerializeField] private Sprite threeFish;
         [SerializeField] private GameObject award;
         [SerializeField] private LeanTweenType easeType;
+        [SerializeField] private GameObject endGameScreen;
+        [SerializeField] private TextMeshProUGUI endGameText;
         
-        private void Start()
+        public void InitializeScoreBoard(int playerCount)
         {
-            _scoreBoard.Add(Team.Red, 0);
-            _scoreBoard.Add(Team.Blue, 0);
+            if (playerCount < 2) throw new Exception("Player count less than 2");
+            if (playerCount > 2) throw new Exception("Player count greater than 2");
+            _scoreBoard = new Dictionary<Team, int>
+            {
+                { Team.Red, 0 },
+                { Team.Blue, 0 }
+            };
             UpdatePointsGUI(Team.Red);
             UpdatePointsGUI(Team.Blue);
+            endGameScreen.SetActive(false);
         }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) AnimateAward(1);
-            if (Input.GetKeyDown(KeyCode.Alpha2)) AnimateAward(2);
-            if (Input.GetKeyDown(KeyCode.Alpha3)) AnimateAward(3);
-        }
-
+        
         public void SetFishSprites(IEnumerable<Tile> tiles)
         {
             var locationsAndSpriteRenderers = FindObjectsByType<InteractableTile>(FindObjectsSortMode.None)
@@ -85,6 +86,26 @@ namespace Systems
             
             awardPopUp.SetActive(true);
             LeanTween.scale(awardPopUp, Vector3.one * size, 1).setEase(easeType).setDestroyOnComplete(true);
+        }
+        
+        public void EndGame()
+        {
+            endGameScreen.SetActive(true);
+            if (_scoreBoard[Team.Red] == _scoreBoard[Team.Blue])
+            {
+                endGameText.color = Color.black;
+                endGameText.text = "TIE";
+            } 
+            else if (_scoreBoard[Team.Red] > _scoreBoard[Team.Blue])
+            {
+                endGameText.color = Color.red;
+                endGameText.text = "RED WINS";
+            }
+            else
+            {
+                endGameText.color = Color.blue;
+                endGameText.text = "BLUE WINS";
+            }
         }
     }
 }

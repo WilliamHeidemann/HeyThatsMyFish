@@ -13,12 +13,11 @@ public class ColorSystem : MonoBehaviour
     [SerializeField] private Sprite waterSprite;
     private Dictionary<Location, SpriteRenderer> _sprites;
 
-    private void Start()
+    public void CollectSprites()
     {
         _sprites = FindObjectsByType<InteractableTile>(FindObjectsSortMode.None)
             .ToDictionary(tile => tile.location, tile => tile.GetComponent<SpriteRenderer>());
     }
-
 
     public void ColorTiles(IEnumerable<Location> locations, ColorType type)
     {

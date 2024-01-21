@@ -1,24 +1,24 @@
 using System;
 using System.Collections.Generic;
 using Logic;
+using Settings;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class BoardSpawner : MonoBehaviour 
 {
-    [SerializeField] private BoardType boardType;
-    [SerializeField] private int boardSize;
     [SerializeField] private float padding;
     [SerializeField] private InteractableTile tilePrefab;
     [SerializeField] private Transform boardInstance;
     
-    public void SpawnBoard()
+    public void SpawnBoard(BoardType boardType, int boardSize)
     {
         DestroyBoard();
         var board = boardType switch
         {
             BoardType.Square => Board.CreateSquareBoard(boardSize),
-            BoardType.Hexagonal => Board.CreateHexagonBoard(boardSize),
+            BoardType.Hexagon => Board.CreateHexagonBoard(boardSize),
+            BoardType.Random => throw new NotImplementedException(),
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -51,11 +51,5 @@ public class BoardSpawner : MonoBehaviour
         {
             DestroyImmediate(boardInstance.GetChild(0).gameObject);
         }
-    }
-
-    private enum BoardType
-    {
-        Square,
-        Hexagonal
     }
 }

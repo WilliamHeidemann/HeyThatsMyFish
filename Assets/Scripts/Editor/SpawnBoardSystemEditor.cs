@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Settings;
+using UnityEditor;
 using UnityEngine;
 
 namespace Editor
@@ -11,9 +12,13 @@ namespace Editor
         {
             _target = (BoardSpawner)target;
             base.OnInspectorGUI();
-            if (GUILayout.Button("Spawn Board"))
+            if (GUILayout.Button("Spawn Hexagonal Board"))
             {
-                _target.SpawnBoard();
+                _target.SpawnBoard(BoardType.Hexagon, 5);
+            }
+            if (GUILayout.Button("Spawn Square Board"))
+            {
+                _target.SpawnBoard(BoardType.Square, 5);
             }
             if (GUILayout.Button("Destroy Board"))
             {

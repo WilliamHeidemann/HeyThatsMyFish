@@ -3,30 +3,48 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Logic;
+using Settings;
 using Systems;
 using UnityEngine;
 
 public class  BoardSystem : MonoBehaviour
 {
     private Board _board;
+    private BoardSpawner _boardSpawner;
     private ColorSystem _colorSystem;
     private PenguinSystem _penguinSystem;
     private PointSystem _pointSystem;
     private readonly TurnManager _teamManager = new();
     private Option<Location> _selectedLocation = Option<Location>.None;
-    private int _penguinsToPlace = 4;
-    
+    private int _penguinsToPlace;
+    [SerializeField] private GameSettings gameSettings;
     private void Awake()
     {
+        _boardSpawner = FindFirstObjectByType<BoardSpawner>();
         _colorSystem = FindFirstObjectByType<ColorSystem>();
         _penguinSystem = FindFirstObjectByType<PenguinSystem>();
         _pointSystem = FindFirstObjectByType<PointSystem>();
-        _board = Board.CreateHexagonBoard(5);
-        _pointSystem.SetFishSprites(_board.Tiles);
     }
 
     private void Start()
     {
+        StartGame();
+    }
+
+    public void StartGame()
+    {
+        _boardSpawner.SpawnBoard(gameSettings.boardType, gameSettings.boardSize);
+        _board = gameSettings.boardType switch
+        {
+            BoardType.Hexagon => Board.CreateHexagonBoard(gameSettings.boardSize),
+            BoardType.Square => Board.CreateSquareBoard(gameSettings.boardSize),
+            BoardType.Random => throw new NotImplementedException("Random board not yet implemented"),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        _pointSystem.SetFishSprites(_board.Tiles);
+        _pointSystem.InitializeScoreBoard(gameSettings.playerCount);
+        _penguinsToPlace = gameSettings.playerCount * gameSettings.penguinsPerPlayer;
+        _colorSystem.CollectSprites();
         StartTileSelectionPhase();
     }
 
@@ -152,9 +170,9 @@ public class  BoardSystem : MonoBehaviour
 
         var remainingRedPoints = _board.RemainingPoints(Team.Red);
         _pointSystem.AwardPoints(remainingRedPoints, Team.Red);
-        print($"Red: {remainingRedPoints}");
         var remainingBluePoints = _board.RemainingPoints(Team.Blue);
         _pointSystem.AwardPoints(remainingBluePoints, Team.Blue);
-        print($"Blue: {remainingBluePoints}");
+        
+        _pointSystem.EndGame();
     }
 }

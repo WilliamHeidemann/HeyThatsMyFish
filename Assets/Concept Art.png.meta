@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d74061323f1a80c48b241dbedd7ba194
+guid: aeb2e62915e01ca4fb7708a0fb3fce9d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2041259448722860821
-    second: blue-penguin_0
+      213: 4839457427248067911
+    second: pinguin 2D-game concept art illustration_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -83,7 +83,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Standalone
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -95,7 +95,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: WebGL
+    buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: blue-penguin_0
+      name: pinguin 2D-game concept art illustration_0
       rect:
         serializedVersion: 2
-        x: 4
+        x: 0
         y: 0
-        width: 397
-        height: 477
+        width: 1600
+        height: 1200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,8 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 51b298f47a2045c10800000000000000
-      internalID: 2041259448722860821
+      spriteID: 7453fb8b3e4392340800000000000000
+      internalID: 4839457427248067911
       vertices: []
       indices: 
       edges: []
@@ -141,7 +141,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      blue-penguin_0: 2041259448722860821
+      pinguin 2D-game concept art illustration_0: 4839457427248067911
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
