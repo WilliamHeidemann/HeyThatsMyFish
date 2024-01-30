@@ -17,7 +17,7 @@ public class BoardSpawner : MonoBehaviour
         var board = boardType switch
         {
             BoardType.Square => Board.CreateSquareBoard(boardSize),
-            BoardType.Hexagon => Board.CreateHexagonBoard(boardSize),
+            BoardType.Hexagon => Board.CreateHexagonBoard(boardSize, 0),
             BoardType.Random => throw new NotImplementedException(),
             _ => throw new ArgumentOutOfRangeException()
         };

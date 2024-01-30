@@ -3521,7 +3521,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1752845552}
         m_TargetAssemblyTypeName: Settings.SettingsSystem, Settings
-        m_MethodName: SetBoardType
+        m_MethodName: SetBoardSize
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3646,7 +3646,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1752845552}
         m_TargetAssemblyTypeName: Settings.SettingsSystem, Settings
-        m_MethodName: SetBoardType
+        m_MethodName: SetBoardSize
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6465,7 +6465,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1752845552}
         m_TargetAssemblyTypeName: Settings.SettingsSystem, Settings
-        m_MethodName: SetBoardType
+        m_MethodName: SetBoardSize
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

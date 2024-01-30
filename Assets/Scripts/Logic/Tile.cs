@@ -10,19 +10,10 @@ namespace Logic
         public Option<Team> Team = Option<Team>.None;
         public readonly int FishCount;
         
-        public Tile(Location location)
+        public Tile(Location location, int fishCount)
         {
             Location = location;
-
-            int SpawnFish()
-            {
-                var percent = Random.value;
-                if (percent < .18f) return 3;
-                if (percent < .53f) return 2;
-                return 1;
-            }
-            
-            FishCount = SpawnFish();
+            FishCount = fishCount;
         }
     }
 }

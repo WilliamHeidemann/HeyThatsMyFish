@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ae7f70b08f4bd7a7018cd689ab9068, type: 3}
   m_Name: Game Settings
   m_EditorClassIdentifier: 
-  playerCount: 2
+  playerCount: 4
   penguinsPerPlayer: 4
   boardType: 0
-  boardSize: 5
+  boardSize: 3

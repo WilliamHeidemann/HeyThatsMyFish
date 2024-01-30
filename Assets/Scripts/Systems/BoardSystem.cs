@@ -37,7 +37,7 @@ public class  BoardSystem : MonoBehaviour
         _boardSpawner.SpawnBoard(gameSettings.boardType, gameSettings.boardSize);
         _board = gameSettings.boardType switch
         {
-            BoardType.Hexagon => Board.CreateHexagonBoard(gameSettings.boardSize),
+            BoardType.Hexagon => Board.CreateHexagonBoard(gameSettings.boardSize, gameSettings.playerCount * gameSettings.penguinsPerPlayer),
             BoardType.Square => Board.CreateSquareBoard(gameSettings.boardSize),
             BoardType.Random => Board.CreateRandomBoard(gameSettings.boardSize),
             _ => throw new ArgumentOutOfRangeException()

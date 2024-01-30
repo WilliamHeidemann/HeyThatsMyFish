@@ -15,8 +15,8 @@ public class Tests
     [SetUp]
     public void SetUp()
     {
-        _testHexBoard = Board.CreateHexagonBoard(5);
-        _testSquareBoard = Board.CreateSquareBoard(5);
+        _testHexBoard = Board.CreateHexagonBoard(5, 0);
+        // _testSquareBoard = Board.CreateSquareBoard(5);
         var location1 = new Location(0, 0, 0);
         var location2 = new Location(1, 0, -1);
         var location3 = new Location(2, 0, -2);
@@ -29,7 +29,7 @@ public class Tests
             location3,
             location4,
         };
-        _testPath = locations.Select(location => new Tile(location)).ToList();
+        _testPath = locations.Select(location => new Tile(location, 0)).ToList();
     }
 
     [Test]
@@ -94,5 +94,13 @@ public class Tests
         var tiles = _testHexBoard.ReachableLocations(source);
         var reachableCount = tiles.Count();
         Assert.AreEqual(20, reachableCount);
+    }
+
+    [Test]
+    public void BoardWith16PenguinsHasAtLeast16TilesWithOneFish()
+    {
+        var board = Board.CreateHexagonBoard(3, 16);
+        var oneFishTiles = board.Tiles.Count(tile => tile.FishCount == 1);
+        Assert.GreaterOrEqual(oneFishTiles, 16);
     }
 }

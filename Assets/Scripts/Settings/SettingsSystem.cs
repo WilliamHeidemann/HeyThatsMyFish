@@ -26,7 +26,11 @@ namespace Settings
 
         public void SetPenguins(int penguins) => gameSettings.penguinsPerPlayer = penguins;
 
-        public void SetBoardType(int boardType) => gameSettings.boardType = (BoardType)boardType;
+        public void SetBoardType(int boardType)
+        {
+            if (boardType >= Enum.GetValues(typeof(BoardType)).Length) return;
+            gameSettings.boardType = (BoardType)boardType;
+        }
 
         public void SetBoardSize(int boardSize) => gameSettings.boardSize = boardSize;
     }

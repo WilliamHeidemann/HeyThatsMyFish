@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Logic
 {
@@ -10,8 +12,33 @@ namespace Logic
         public readonly IEnumerable<Tile> Tiles;
         public readonly IEnumerable<Location> Locations;
 
-        public static Board CreateHexagonBoard(int size)
+        private static IEnumerable<int> FishToDistribute(int boardSideLength, int penguinsToBePlaced)
         {
+            int FishCount()
+            {
+                if (penguinsToBePlaced > 0)
+                {
+                    penguinsToBePlaced--;
+                    return 1;
+                }
+                var percent = Random.value;
+                if (percent < .18f) return 3;
+                if (percent < .53f) return 2;
+                return 1;
+            }
+
+            var boardTileCount = (int)Mathf.Pow(boardSideLength, 2) * 3 - boardSideLength * 3 + 1;
+            var fish = new List<int>();
+            Enumerable.Range(0, boardTileCount).ToList().ForEach(_ => fish.Add(FishCount()));
+            return fish.OrderBy(_ => Random.value);
+        }
+
+        public static Board CreateHexagonBoard(int size, int penguinsToBePlaced)
+        {
+            var fishData = FishToDistribute(size, penguinsToBePlaced);
+            var fish = new Stack<int>();
+            foreach (var f in fishData) fish.Push(f);
+            
             var tiles = new List<Tile>();
             for (var q = -size + 1; q < size; q++)
             {
@@ -21,7 +48,7 @@ namespace Logic
                 {
                     var s = -q - r;
                     var location = new Location(q, r, s);
-                    tiles.Add(new Tile(location));
+                    tiles.Add(new Tile(location, fish.Pop()));
                 }
             }
 
