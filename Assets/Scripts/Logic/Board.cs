@@ -104,19 +104,12 @@ namespace Logic
             }
         }
 
-        public bool HasMovesLeft(Team team)
-        {
-            var penguinTiles = Tiles.Where(tile =>
+        public bool HasMovesLeft(Team team) =>
+            Tiles.Where(tile => 
             {
-                if (tile.Team.IsSome(out var tileTeam))
-                {
-                    return tileTeam == team;
-                }
+                if (tile.Team.IsSome(out var tileTeam)) return tileTeam == team;
                 return false;
-            });
-            
-            return penguinTiles.SelectMany(tile => ReachableLocations(tile.Location)).Any();
-        }
+            }).SelectMany(tile => ReachableLocations(tile.Location)).Any();
 
         public bool HasTile(Location location, out Tile tile)
         {
@@ -126,9 +119,8 @@ namespace Logic
 
         public bool TwoPlayersCanMove()
         {
-            var redHasMovesLeft = HasMovesLeft(Team.Red);
-            var blueHasMovesLeft = HasMovesLeft(Team.Blue);
-            return redHasMovesLeft && blueHasMovesLeft;
+            var playersThatCanMove = Enumerable.Range(0, 4).Count(i => HasMovesLeft((Team)i));
+            return playersThatCanMove >= 2;
         }
 
         public int RemainingPoints(Team team)
